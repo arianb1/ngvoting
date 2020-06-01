@@ -1,0 +1,69 @@
+{
+  "users": [
+    {
+      "firstName": "ari",
+      "lastName": "bajo",
+      "username": "arianb1",
+      "password": "ryan1111",
+      "id": 1,
+      "posts": []
+    },
+    {
+      "username": "test",
+      "password": "testing",
+      "firstName": "fn",
+      "lastName": "ln",
+      "token": "asdfasdfasdf",
+      "id": 2,
+      "posts": []
+    },
+    {
+      "username": "arianb1",
+      "password": "ryan1111",
+      "firstName": "fn",
+      "lastName": "ln",
+      "token": "asdfasdfasdf",
+      "id": 3,
+      "posts": [
+        {
+          "userName": "arianb1",
+          "content": "test"
+        }
+      ]
+    },
+    {
+      "username": "ari",
+      "password": "testing",
+      "firstName": "fn",
+      "lastName": "ln",
+      "token": "asdfasdfasdf",
+      "id": 4,
+      "posts": [
+        {
+          "userName": "ari",
+          "content": "test"
+        }
+      ]
+    }
+  ],
+  "posts": [
+    {
+      "content": {
+        "content": "aaaaaaaaa",
+        "userName": "ari"
+      },
+      "userId": "4",
+      "id": 1
+    },
+    {
+      "content": "asfsadf",
+      "userId": "4",
+      "id": 2
+    },
+    {
+      "content": "xxxxxxxxxx",
+      "userId": "4",
+      "id": 3
+    }
+  ]
+}

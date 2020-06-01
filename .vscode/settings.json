@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/5f22d26b-3b11-49c7-9654-c3db6dc8a3aa/resourceGroups/Resource_Group_App_Win/providers/Microsoft.Web/sites/ngVote",
+    "appService.deploySubpath": "dist\\vote"
+}
