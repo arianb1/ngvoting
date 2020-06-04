@@ -32,64 +32,16 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private postsService: PostsService,
     private authenticationService: AuthenticationService,
     private http: HttpClient
   ) {
     this.authenticationService.currentUser.subscribe(
       x => (this.currentUser = x)
     );
-
-    this.postsService.currentPost.subscribe(x => (this.currentPost = x));
   }
 
   ngOnInit() {
-    // this.getPosts();
-    this.allPosts = this.postsService.myGetPosts();
   }
 
-  private getPosts() {
-    this.postsService
-      .getFollowedPosts(this.currentUser.id)
-      .pipe(first())
-      .subscribe(posts => {
-        this.allPosts = posts;
-      });
-  }
 
-  addPost(): void {
-    if (!this.inputContent) {
-      this.isEmpty = true;
-    } else {
-      console.log('adding');
-      // this.postsService
-      //   .addPost(this.currentUser.id, this.inputContent)
-      //   .pipe(first())
-      //   .subscribe(
-      //     data => {
-      //       this.getPosts();
-      //     },
-      //     error => {
-      //       console.log(error);
-      //     }
-      //   );
-      this.postsService.myAddPost(this.currentUser.username, this.inputContent);
-      this.inputContent = null;
-      this.isEmpty = false;
-    }
-  }
-
-  deletePost(postId: number) {
-    this.postsService
-      .delete(this.currentUser.id, postId)
-      .pipe(first())
-      .subscribe(
-        data => {
-          this.getPosts();
-        },
-        error => {
-          console.log(error);
-        }
-      );
-  }
 }

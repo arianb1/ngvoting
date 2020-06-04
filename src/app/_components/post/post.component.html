@@ -1,0 +1,50 @@
+﻿<div class="container-fluid">
+  <div class="row">
+    <div class="titleHeader">
+      <h2>
+        Make new post
+      </h2>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="newPostBody col-md-10">
+      <input type="text" [(ngModel)]="inputContent" class="form-control" />
+      <p *ngIf="!currentUser" class="post-empty">Login to create your posts!</p>
+      <p *ngIf="currentUser && isEmpty" class="post-empty">Cannot add an empty post!</p>
+    </div>
+    <div class="col-md-2">
+      <i class="fa fa-paper-plane fa-2x" (click)="addPost()"></i>
+    </div>
+  </div>
+
+  <div class="row">
+    <ul class="col-md-12" *ngIf="allPosts">
+      <li *ngFor="let pst of allPosts">
+        <div class="postHeader col-md-12">
+          <div class="row">
+            <i class="col-md-2 fa fa-user"></i>
+            <p class="col-md-10 user">
+              {{ pst.userName }}
+            </p>
+          </div>
+        </div>
+
+        <div class="postBody col-md-12">
+          <p class="post">
+            {{ pst.content }}
+          </p>
+          <i
+            *ngIf="currentUser && pst.userName == currentUser.username"
+            class="fa fa-trash"
+            (click)="deletePost(pst.id)"></i
+          >
+        </div>
+      </li>
+    </ul>
+    <div *ngIf="allPosts.length === 0" class="notFound">
+      <p class="post" >No posts found</p>
+    </div>
+  </div>
+</div>

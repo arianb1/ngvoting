@@ -1,50 +1,46 @@
-﻿<div class="container-fluid">
-  <div class="row">
-    <div class="titleHeader">
-      <h2>
-        Make new post
-      </h2>
-    </div>
+﻿<div class="container-fluid" style="margin-top: 20px;">
+  
+  <div class="jumbotron" style="padding: 2rem 1rem;">
+    <h1 class="display-4">Welcome to Dvote!</h1>
+    <p class="lead">A decentralized solution to online voting with complete anonymity and total transparency.</p>
+    <hr class="my-3">
+    <p>First...</p>
+    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
   </div>
 
-
-  <div class="row">
-    <div class="newPostBody col-md-10">
-      <input type="text" [(ngModel)]="inputContent" class="form-control" />
-      <p *ngIf="!currentUser" class="post-empty">Login to create your posts!</p>
-      <p *ngIf="currentUser && isEmpty" class="post-empty">Cannot add an empty post!</p>
-    </div>
-    <div class="col-md-2">
-      <i class="fa fa-paper-plane fa-2x" (click)="addPost()"></i>
-    </div>
-  </div>
-
-  <div class="row">
-    <ul class="col-md-12" *ngIf="allPosts">
-      <li *ngFor="let pst of allPosts">
-        <div class="postHeader col-md-12">
-          <div class="row">
-            <i class="col-md-2 fa fa-user"></i>
-            <p class="col-md-10 user">
-              {{ pst.userName }}
-            </p>
-          </div>
+  <div class="row row-cols-1 row-cols-md-3">
+    <div class="col mb-4">
+      <div class="card">
+        <img src="https://via.placeholder.com/350x150" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
         </div>
-
-        <div class="postBody col-md-12">
-          <p class="post">
-            {{ pst.content }}
-          </p>
-          <i
-            *ngIf="currentUser && pst.userName == currentUser.username"
-            class="fa fa-trash"
-            (click)="deletePost(pst.id)"></i
-          >
+      </div>
+    </div>
+    <div class="col mb-4">
+      <div class="card">
+        <img src="https://via.placeholder.com/350x150" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
         </div>
-      </li>
-    </ul>
-    <div *ngIf="allPosts.length === 0" class="notFound">
-      <p class="post" >No posts found</p>
+      </div>
+    </div>
+    <div class="col mb-4">
+      <div class="card">
+        <img src="https://via.placeholder.com/350x150" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
+        </div>
+      </div>
     </div>
   </div>
+
+  <div class="row">
+
+  </div>
+
+  
 </div>

@@ -7,6 +7,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './_components/home/home.component';
+import { PostComponent } from './_components/post/post.component';
 import { HeaderComponent } from './_components/header/header.component';
 import { FooterComponent } from './_components/footer/footer.component';
 import { AlertComponent } from './_components/alert/alert.component';
@@ -21,6 +22,7 @@ import { EditComponent } from './_components/edit/edit.component';
   declarations: [
     AppComponent,
     HomeComponent,
+    PostComponent,
     HeaderComponent,
     FooterComponent,
     LoginComponent,
