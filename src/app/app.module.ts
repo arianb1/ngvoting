@@ -17,6 +17,7 @@ import { RegisterComponent } from './_components/register/register.component';
 import { MyProfileComponent } from './_components/my-profile/my-profile.component';
 import { ExploreComponent } from './_components/explore/explore.component';
 import { EditComponent } from './_components/edit/edit.component';
+import { VoteComponent } from './_components/vote/vote.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { EditComponent } from './_components/edit/edit.component';
     AlertComponent,
     MyProfileComponent,
     ExploreComponent,
-    EditComponent
+    EditComponent,
+    VoteComponent
   ],
   imports: [
     BrowserModule,

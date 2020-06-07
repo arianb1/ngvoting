@@ -8,6 +8,7 @@ import { RegisterComponent } from './_components/register/register.component';
 import { MyProfileComponent } from './_components/my-profile/my-profile.component';
 import { ExploreComponent } from './_components/explore/explore.component';
 import { EditComponent } from './_components/edit/edit.component';
+import { VoteComponent } from './_components/vote/vote.component';
 
 const routes: Routes = [
   {path:  '', pathMatch:  'full', redirectTo:  'home'},
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'explore', component: ExploreComponent },
   { path: 'profile', component: MyProfileComponent },
   { path: 'edit', component: EditComponent },
+  { path: 'newvote', component: VoteComponent },
 ];
 
 @NgModule({

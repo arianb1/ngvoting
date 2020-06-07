@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="titleHeader">
+      <h2>
+        Create Vote
+      </h2>
+    </div>
+  </div>
+  <form [formGroup]="voteForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="votetitle">Title</label>
+      <input
+        type="text"
+        formControlName="votetitle"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.votetitle.errors }"
+      />
+      <div *ngIf="submitted && f.votetitle.errors" class="invalid-feedback">
+        <div *ngIf="f.votetitle.errors.required">Vote title is required</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="votedesc">Description</label>
+      <input
+        type="text"
+        formControlName="votedesc"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.votedesc.errors }"
+      />
+      <div *ngIf="submitted && f.votedesc.errors" class="invalid-feedback">
+        <div *ngIf="f.votedesc.errors.required">Vote description is required</div>
+        <div *ngIf="f.votedesc.errors.minlength">Vote description must be > 6 chars</div>
+      </div>
+    </div>
+
+    <h4>Options</h4>
+    <hr>
+    <input type="text" name="newOpt" formControlName="newOpt" style="width:90%;" />
+    <input type="button" name="addOpt" value="Add Option" (click)="addOption()">
+    <p *ngIf="isEmpty" class="post-empty">Cannot add an empty option!</p>
+
+    <ul class="voteOptions">
+      <li *ngFor="let opt of currentVote.voteOptions">
+        <span class="badge">X</span> 
+        <span>{{opt}}</span>
+      </li>
+    </ul>
+
+    <div class="form-group">
+      <button [disabled]="loading" class="btn btn-light">
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span>
+        Submit
+      </button>
+    </div>
+  </form>
+</div>

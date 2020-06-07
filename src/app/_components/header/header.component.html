@@ -32,11 +32,22 @@
         <li *ngIf="currentUser" class="nav-item">
           <a class="nav-link" href="/post">Post</a>
         </li>
-        <li *ngIf="currentUser" class="nav-item">
+        <!-- <li *ngIf="currentUser" class="nav-item">
           <a class="nav-link" href="/explore">Explore</a>
         </li>
         <li *ngIf="currentUser" class="nav-item">
           <a class="nav-link" href="/profile">Profile</a>
+        </li> -->
+        <li *ngIf="currentUser" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Admin
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="newvote">New Vote</a>
+            <a class="dropdown-item" href="#">Modify Vote</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Settings</a>
+          </div>
         </li>
         <li *ngIf="currentUser" class="nav-item">
           <a class="nav-link" (click)="logout()">Logout</a>
