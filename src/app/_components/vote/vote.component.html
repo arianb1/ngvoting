@@ -2,7 +2,7 @@
   <div class="row">
     <div class="titleHeader">
       <h2>
-        Create Vote
+        Create Vote <p style="font-size: 24px;">{{ currentState }}</p>
       </h2>
     </div>
   </div>
@@ -45,6 +45,8 @@
         <span>{{opt}}</span>
       </li>
     </ul>
+
+    <input type="number" name="newState" formControlName="newState" style="width:10%;" />
 
     <div class="form-group">
       <button [disabled]="loading" class="btn btn-light">

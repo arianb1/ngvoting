@@ -3,3 +3,4 @@ export * from './authentication.service';
 export * from './user.service';
 export * from './posts.service';
 export * from './manage.service';
+export * from './test.service';

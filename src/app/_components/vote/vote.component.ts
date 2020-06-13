@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ManageService, AuthenticationService } from '../../_services';
+import { ManageService, AuthenticationService, TestService } from '../../_services';
 import { User, Vote } from '../../_models';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,12 +18,15 @@ export class VoteComponent implements OnInit {
   loading = false;
   submitted = false;
   isEmpty = false;
+  currentState: number;
+  newState: number;
 
   constructor(
     private authenticationService: AuthenticationService,
     private manageService: ManageService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private testService: TestService,
   ) {
     this.authenticationService.currentUser.subscribe(
       x => (this.currentUser = x)
@@ -38,6 +41,13 @@ export class VoteComponent implements OnInit {
       // voteopsX: this.formBuilder.array([]),
       voteOptions: [ this.currentVote.voteOptions ],
       newOpt: [''],
+      newState: 999,
+    });
+
+    // get current state/property of contract
+    this.testService.retreiveNumber().then(res => {
+      this.currentState = res;
+      this.newState = this.currentState;
     });
   }
 
@@ -62,6 +72,12 @@ export class VoteComponent implements OnInit {
     }
 
     this.loading = true;
+    // get current state/property of contract
+    this.testService.storeNumber(this.f.newState.value).then(res => {
+      this.currentState = res;
+    });
+
+    this.loading = false;
     console.log('calling...');
     this.manageService
       .createVote(this.voteForm.value)
