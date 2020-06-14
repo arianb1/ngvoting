@@ -26,31 +26,30 @@ export class TestService {
         this.web3 = new Web3.providers.HttpProvider('https://ropsten.etherscan.io/'); // http://localhost:8545');
         console.log('new provider ' + this.web3);
       }
-      console.log('transfer.service :: constructor :: window.ethereum');
       window.web3 = new Web3(window.ethereum);
-      console.log('transfer.service :: constructor :: this.web3');
-      console.log(this.web3);
+      console.log('WEB3: ' + this.web3);
       // this method will open MetaMask to enable our app to interact with our wallet.
-      this.enable = this.enableMetaMaskAccount();
+      // this.enable = this.enableMetaMaskAccount();
     }
   }
 
   private async enableMetaMaskAccount(): Promise<any> {
     let enable = false;
+    console.log('start metamask');
     await new Promise((resolve, reject) => {
       enable = window.ethereum.enable();
     });
     return Promise.resolve(enable);
+    console.log('done metamask');
   }
 
-  private async getAccount(): Promise<any> {
-    console.log('transfer.service :: getAccount :: start');
+  public async getAccount(): Promise<any> {
+    console.log('getAccount-start');
+    this.enable = this.enableMetaMaskAccount();
+    console.log('after metamask');
     if (this.account == null) {
       this.account = await new Promise((resolve, reject) => {
-        console.log('transfer.service :: getAccount :: eth');
-        console.log(window.web3.eth);
         window.web3.eth.getAccounts((err, retAccount) => {
-          console.log('transfer.service :: getAccount: retAccount');
           console.log(retAccount);
           if (retAccount.length > 0) {
             this.account = retAccount[0];
@@ -69,39 +68,17 @@ export class TestService {
     return Promise.resolve(this.account);
   }
 
-  public async getUserBalance(): Promise<any> {
-    const account = await this.getAccount();
-    console.log('transfer.service :: getUserBalance :: account');
-    console.log(account);
-    return new Promise((resolve, reject) => {
-      window.web3.eth.getBalance(account, function(err, balance) {
-        console.log('transfer.service :: getUserBalance :: getBalance');
-        console.log(balance);
-        if (!err) {
-          const retVal = {
-            account: account,
-            balance: balance
-          };
-          console.log('transfer.service :: getUserBalance :: getBalance :: retVal');
-          console.log(retVal);
-          resolve(retVal);
-        } else {
-          reject({account: 'error', balance: 0});
-        }
-      });
-    }) as Promise<any>;
-  }
-
-
   public async retreiveNumber(): Promise<any> {
     const that = this;
-    console.log('transfer.service');
-    const myacc = await this.getAccount();
+    console.log('start retreiveNumber');
+    // const myacc = await this.getAccount();
 
-    const myContract = new window.web3.eth.Contract(JSON.parse(tokenAbi), address, {
-      from: myacc,
-      gasPrice: '30000000000' // default gas price in wei, 20 gwei in this case
-    });
+    // console.log('got acc:' + myacc);
+    const myContract = new window.web3.eth.Contract(JSON.parse(tokenAbi), address);
+    // , {
+      // from: myacc,
+      // gasPrice: '30000000000' // default gas price in wei, 20 gwei in this case
+    // });
 
       // console.log (myContract);
     // const result = myContract.methods.storenumber(323).send();

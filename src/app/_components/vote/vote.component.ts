@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ManageService, AuthenticationService, TestService } from '../../_services';
+import { ManageService, AuthenticationService, TestService, AlertService } from '../../_services';
 import { User, Vote } from '../../_models';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,6 +27,7 @@ export class VoteComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private testService: TestService,
+    private alertService: AlertService,
   ) {
     this.authenticationService.currentUser.subscribe(
       x => (this.currentUser = x)
@@ -41,13 +42,14 @@ export class VoteComponent implements OnInit {
       // voteopsX: this.formBuilder.array([]),
       voteOptions: [ this.currentVote.voteOptions ],
       newOpt: [''],
-      newState: 999,
+      newState: 0
     });
 
     // get current state/property of contract
     this.testService.retreiveNumber().then(res => {
       this.currentState = res;
       this.newState = this.currentState;
+      this.alertService.success('Current contract state: ' + this.currentState, true);
     });
   }
 
@@ -72,26 +74,39 @@ export class VoteComponent implements OnInit {
     }
 
     this.loading = true;
-    // get current state/property of contract
-    this.testService.storeNumber(this.f.newState.value).then(res => {
-      this.currentState = res;
+    // get account number first (login )
+    let account: any = null;
+    this.testService.getAccount().then(res => {
+      account = res;
     });
 
-    this.loading = false;
-    console.log('calling...');
-    this.manageService
-      .createVote(this.voteForm.value)
-      .subscribe(
-        (result: User) => {
-          this.router.navigate(['/home']);
-        },
-        error => {
-          this.loading = false;
-        }
-      );
-    this.authenticationService.currentUser.subscribe(
-      x => (this.currentUser = x)
-    );
+    if (account) {
+      this.testService.storeNumber(this.f.newState.value).then(res => {
+        this.currentState = res;
+      });
+
+      this.loading = false;
+      this.alertService.success('Voting submitted', true);
+      this.router.navigate(['/home']);
+    }
+    else {
+      this.alertService.error('Login failed...', true);
+    }
+
+    // console.log('calling...');
+    // this.manageService
+    //   .createVote(this.voteForm.value)
+    //   .subscribe(
+    //     (result: User) => {
+    //       this.router.navigate(['/home']);
+    //     },
+    //     error => {
+    //       this.loading = false;
+    //     }
+    //   );
+    // this.authenticationService.currentUser.subscribe(
+    //   x => (this.currentUser = x)
+    // );
   }
 
   ngOnDestroy() {

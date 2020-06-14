@@ -1,1 +1,4 @@
-<div *ngIf="message" [ngClass]="message.cssClass">{{ message.text }}</div>
+<div *ngIf="message" [ngClass]="message.cssClass" style="margin-top: 10px; margin-bottom:5px;">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    {{ message.text }}
+</div>
