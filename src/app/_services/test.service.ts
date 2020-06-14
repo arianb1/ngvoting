@@ -35,21 +35,21 @@ export class TestService {
 
   private async enableMetaMaskAccount(): Promise<any> {
     let enable = false;
-    console.log('start metamask');
     await new Promise((resolve, reject) => {
       enable = window.ethereum.enable();
     });
     return Promise.resolve(enable);
-    console.log('done metamask');
   }
 
-  public async getAccount(): Promise<any> {
-    console.log('getAccount-start');
-    this.enable = this.enableMetaMaskAccount();
-    console.log('after metamask');
+  public async  getAccount(): Promise<any> {
+    console.log('getAccount-start1');
+    this.enable = await window.ethereum.enable(); // await this.enableMetaMaskAccount();
+    console.log('getAccount-start2');
     if (this.account == null) {
+      console.log('getAccount-start3');
       this.account = await new Promise((resolve, reject) => {
         window.web3.eth.getAccounts((err, retAccount) => {
+          console.log('getAccount-start4');
           console.log(retAccount);
           if (retAccount.length > 0) {
             this.account = retAccount[0];

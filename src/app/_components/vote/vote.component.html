@@ -46,7 +46,18 @@
       </li>
     </ul>
 
-    <input type="number" name="newState" formControlName="newState" style="width:10%;" />
+    <div class="form-group">
+      <label for="newState">New State</label>
+      <input
+        type="text" style="width: 10%;"
+        formControlName="newState"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.newState.errors }"
+      />
+      <div *ngIf="submitted && f.newState.errors" class="invalid-feedback">
+        <div *ngIf="f.newState.errors.required">New State is required</div>
+      </div>
+    </div>
 
     <div class="form-group">
       <button [disabled]="loading" class="btn btn-light">

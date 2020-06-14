@@ -42,7 +42,7 @@ export class VoteComponent implements OnInit {
       // voteopsX: this.formBuilder.array([]),
       voteOptions: [ this.currentVote.voteOptions ],
       newOpt: [''],
-      newState: 0
+      newState: [0, Validators.required],
     });
 
     // get current state/property of contract
@@ -76,22 +76,28 @@ export class VoteComponent implements OnInit {
     this.loading = true;
     // get account number first (login )
     let account: any = null;
+    console.log('step 1');
     this.testService.getAccount().then(res => {
+      console.log('step 2');
       account = res;
+      console.log(account);
+      if (account) {
+        console.log('step 3');
+        this.testService.storeNumber(this.f.newState.value).then(res1 => {
+          this.currentState = res1;
+        });
+
+        this.loading = false;
+        this.alertService.success('Voting submitted', true);
+        this.router.navigate(['/home']);
+      }
+      else {
+        console.log('step 4');
+        this.alertService.error('Login failed...', true);
+        this.loading = false;
+      }
     });
 
-    if (account) {
-      this.testService.storeNumber(this.f.newState.value).then(res => {
-        this.currentState = res;
-      });
-
-      this.loading = false;
-      this.alertService.success('Voting submitted', true);
-      this.router.navigate(['/home']);
-    }
-    else {
-      this.alertService.error('Login failed...', true);
-    }
 
     // console.log('calling...');
     // this.manageService
