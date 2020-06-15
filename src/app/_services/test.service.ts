@@ -109,9 +109,8 @@ export class TestService {
       gasPrice: '30000000000' // default gas price in wei, 20 gwei in this case
     });
 
-      // console.log (myContract);
+    console.log ('before call');
     const result = myContract.methods.storenumber(newNum).send();
-    console.log(result);
     return Promise.resolve(result);
 
   }

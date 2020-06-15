@@ -85,11 +85,17 @@ export class VoteComponent implements OnInit {
         console.log('step 3');
         this.testService.storeNumber(this.f.newState.value).then(res1 => {
           this.currentState = res1;
+          console.log('success:' + res1);
+          // move next 3 lines below once adding event notification
+          this.loading = false;
+          this.alertService.success('Voting submitted', true);
+          this.router.navigate(['/home']);
+        }).catch(error => {
+          this.loading = false;
+          console.log('error:' + error);
+          this.alertService.error('Error...', true);
         });
-
-        this.loading = false;
-        this.alertService.success('Voting submitted', true);
-        this.router.navigate(['/home']);
+        // move success here
       }
       else {
         console.log('step 4');
