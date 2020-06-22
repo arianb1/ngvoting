@@ -3,14 +3,14 @@ const Web3 = require('web3');
 declare let require: any;
 declare let window: any;
 // tokenAbi points to the ABI file we compiled from the contract SOL file
-const tokenAbi = '[{"inputs": [],"name": "retreivenumber","outputs": [{"internalType": "uint256","name": "","type": "uint256"}],"stateMutability": "view","type": "function"},{"inputs": [{"internalType": "uint256","name": "myNum","type": "uint256"}],"name": "storenumber","outputs": [],"stateMutability": "nonpayable","type": "function"}]';
-const address = '0x6d7276F6C9C1a37dd6C6d433CecA9F60042CdbCC';
-// to https://ropsten.etherscan.io/address/0x6d7276F6C9C1a37dd6C6d433CecA9F60042CdbCC
+const tokenAbi = '[{"inputs":[{"internalType":"string","name":"vn","type":"string"},{"internalType":"string","name":"vd","type":"string"},{"internalType":"bytes32[]","name":"proposalNames","type":"bytes32[]"}],"name":"createVote","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"chairperson","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getVote","outputs":[{"internalType":"string","name":"","type":"string"},{"internalType":"string","name":"","type":"string"},{"internalType":"bytes32[]","name":"","type":"bytes32[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"proposals","outputs":[{"internalType":"bytes32","name":"name","type":"bytes32"},{"internalType":"uint256","name":"voteCount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"voteDesc","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"voteName","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"}]';
+const address = '0xdf7B62dD8Eb0711d2Ab5B972118aAD2089C8FF0A'; // '0x37a33d0FB1d77aaa1866BAA51A4AA8BfBf3600Ba';
+// to https://ropsten.etherscan.io/address/0x37a33d0fb1d77aaa1866baa51a4aa8bfbf3600ba
 
 @Injectable({
   providedIn: 'root'
 })
-export class TestService {
+export class VotingService {
   private account: any = null;
   private readonly web3: any;
   private enable: any;
@@ -68,12 +68,9 @@ export class TestService {
     return Promise.resolve(this.account);
   }
 
-  public async retreiveNumber(): Promise<any> {
+  public async retreiveVote(): Promise<any> {
     const that = this;
-    console.log('start retreiveNumber');
-    // const myacc = await this.getAccount();
-
-    // console.log('got acc:' + myacc);
+    console.log('start retreiveVote');
     const myContract = new window.web3.eth.Contract(JSON.parse(tokenAbi), address);
     // , {
       // from: myacc,
@@ -84,8 +81,9 @@ export class TestService {
     // const result = myContract.methods.storenumber(323).send();
     // console.log(result);
 
-    const result1 = await myContract.methods.retreivenumber().call();
+    const result1 = await myContract.methods.getVote().call();
     console.log(result1);
+    result1[2] = result1[2].map(x => window.web3.utils.hexToAscii(x).replace(/[^\x20-\x7E]/g, ''));
     return Promise.resolve(result1);
 
       // console.log(tokenAbi);
@@ -99,9 +97,9 @@ export class TestService {
       // console.log(account);
   }
 
-  public async storeNumber(newNum: number): Promise<any> {
+  public async createVote(vn: string, vd: string, proposalNames: Array<string>): Promise<any> {
     const that = this;
-    console.log('storeNumber');
+    console.log('createVote');
     const myacc = await this.getAccount();
 
     const myContract = new window.web3.eth.Contract(JSON.parse(tokenAbi), address, {
@@ -110,9 +108,10 @@ export class TestService {
     });
 
     console.log ('before call');
-    const result = myContract.methods.storenumber(newNum).send();
+    const params = proposalNames.map(x => window.web3.utils.toHex(x.trim())); // .padEnd(66, '0')
+    const result = myContract.methods.createVote(vn, vd, params).send();
     return Promise.resolve(result);
-
+    console.log(result);
   }
 
 }

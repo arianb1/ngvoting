@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ManageService, AuthenticationService, TestService, AlertService } from '../../_services';
+import { ManageService, AuthenticationService, TestService, AlertService, VotingService } from '../../_services';
 import { User, Vote } from '../../_models';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,15 +18,15 @@ export class VoteComponent implements OnInit {
   loading = false;
   submitted = false;
   isEmpty = false;
-  currentState: number;
-  newState: number;
+  // currentState: number;
+  // newState: number;
 
   constructor(
     private authenticationService: AuthenticationService,
     private manageService: ManageService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private testService: TestService,
+    private testService: VotingService, // TestService,
     private alertService: AlertService,
   ) {
     this.authenticationService.currentUser.subscribe(
@@ -40,16 +40,22 @@ export class VoteComponent implements OnInit {
       votetitle: [this.currentVote.voteTitle, Validators.required],
       votedesc: [this.currentVote.voteDesc, [Validators.required, Validators.minLength(6)]],
       // voteopsX: this.formBuilder.array([]),
-      voteOptions: [ this.currentVote.voteOptions ],
       newOpt: [''],
       newState: [0, Validators.required],
     });
 
     // get current state/property of contract
-    this.testService.retreiveNumber().then(res => {
-      this.currentState = res;
-      this.newState = this.currentState;
-      this.alertService.success('Current contract state: ' + this.currentState, true);
+    this.testService.retreiveVote().then(res => {
+      this.f.votetitle.setValue(res[0]);
+      this.f.votedesc.setValue(res[1]);
+
+      for (const entry of res[2]) {
+        this.currentVote.voteOptions.push(entry.trim());
+      }
+
+      // this.currentState = res;
+      // this.newState = this.currentState;
+      this.alertService.success('Vote info successfully retreived', true);
     });
   }
 
@@ -77,14 +83,16 @@ export class VoteComponent implements OnInit {
     // get account number first (login )
     let account: any = null;
     console.log('step 1');
+    console.log(this.currentVote.voteOptions);
     this.testService.getAccount().then(res => {
       console.log('step 2');
       account = res;
       console.log(account);
       if (account) {
         console.log('step 3');
-        this.testService.storeNumber(this.f.newState.value).then(res1 => {
-          this.currentState = res1;
+        // this.testService.storeNumber(this.f.newState.value).then(res1 => {
+        this.testService.createVote(this.f.votetitle.value, this.f.votedesc.value, this.currentVote.voteOptions).then(res1 => {
+          // this.currentState = res1;
           console.log('success:' + res1);
           // move next 3 lines below once adding event notification
           this.loading = false;
