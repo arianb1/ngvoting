@@ -7,6 +7,7 @@
     </div>
   </div>
   <form [formGroup]="voteForm" (ngSubmit)="onSubmit()">
+    <input type="hidden" formControlName="contractAdress" />
     <div class="form-group">
       <label for="votetitle">Title</label>
       <input

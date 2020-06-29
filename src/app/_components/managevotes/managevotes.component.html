@@ -1,0 +1,24 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="titleHeader">
+      <h2>
+        Manage Votes
+      </h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <button type="button" class="btn btn-primary pull-right" [routerLink]="['/newvote', '0']" > Add New Vote</button> 
+    </div>
+  </div>
+
+  <ul>
+    <li *ngFor="let votex of allVotes">
+      {{votex.voteName}} 
+      {{votex.voteStatus}} 
+      <a class="pull-right;" [routerLink]="['/newvote', votex.voteAddress]">Edit</a>
+    </li>
+  </ul>
+
+</div>

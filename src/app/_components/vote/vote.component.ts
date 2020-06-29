@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ManageService, AuthenticationService, TestService, AlertService, VotingService } from '../../_services';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { ManageService, AuthenticationService, TestService, AlertService, VotingService, ManageVotesService } from '../../_services';
 import { User, Vote } from '../../_models';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -18,6 +18,7 @@ export class VoteComponent implements OnInit {
   loading = false;
   submitted = false;
   isEmpty = false;
+  // contractAdress = '0';
   // currentState: number;
   // newState: number;
 
@@ -26,7 +27,9 @@ export class VoteComponent implements OnInit {
     private manageService: ManageService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private testService: VotingService, // TestService,
+    private route: ActivatedRoute,
+    private voteService: VotingService,
+    private manageVoteService: ManageVotesService,
     private alertService: AlertService,
   ) {
     this.authenticationService.currentUser.subscribe(
@@ -42,21 +45,24 @@ export class VoteComponent implements OnInit {
       // voteopsX: this.formBuilder.array([]),
       newOpt: [''],
       newState: [0, Validators.required],
+      contractAdress: [this.route.snapshot.paramMap.get('addr'), Validators.required],
     });
 
     // get current state/property of contract
-    this.testService.retreiveVote().then(res => {
-      this.f.votetitle.setValue(res[0]);
-      this.f.votedesc.setValue(res[1]);
+    if (this.f.contractAdress.value !== '0') {
+      this.manageVoteService.retreiveVote(this.f.contractAdress.value).then(res => {
+        this.f.votetitle.setValue(res[0]);
+        this.f.votedesc.setValue(res[1]);
 
-      for (const entry of res[2]) {
-        this.currentVote.voteOptions.push(entry.trim());
-      }
+        for (const entry of res[2]) {
+          this.currentVote.voteOptions.push(entry.trim());
+        }
 
-      // this.currentState = res;
-      // this.newState = this.currentState;
-      this.alertService.success('Vote info successfully retreived', true);
-    });
+        // this.currentState = res;
+        // this.newState = this.currentState;
+        this.alertService.success('Vote info successfully retreived', true);
+      });
+    }
   }
 
 
@@ -84,25 +90,39 @@ export class VoteComponent implements OnInit {
     let account: any = null;
     console.log('step 1');
     console.log(this.currentVote.voteOptions);
-    this.testService.getAccount().then(res => {
+    this.manageVoteService.getAccount().then(res => {
       console.log('step 2');
       account = res;
       console.log(account);
       if (account) {
         console.log('step 3');
-        // this.testService.storeNumber(this.f.newState.value).then(res1 => {
-        this.testService.createVote(this.f.votetitle.value, this.f.votedesc.value, this.currentVote.voteOptions).then(res1 => {
-          // this.currentState = res1;
-          console.log('success:' + res1);
-          // move next 3 lines below once adding event notification
-          this.loading = false;
-          this.alertService.success('Voting submitted', true);
-          this.router.navigate(['/home']);
-        }).catch(error => {
-          this.loading = false;
-          console.log('error:' + error);
-          this.alertService.error('Error...', true);
-        });
+        if (this.f.contractAdress.value !== '0') {
+          this.manageVoteService.updateVote(this.f.contractAdress.value, this.f.votetitle.value, 
+                                            this.f.votedesc.value, this.currentVote.voteOptions).then(res1 => {
+            console.log('success:' + res1);
+            // move next 3 lines below once adding event notification
+            this.loading = false;
+            this.alertService.success('Voting submitted', true);
+            this.router.navigate(['/managevotes']);
+          }).catch(error => {
+            this.loading = false;
+            console.log('error:' + error);
+            this.alertService.error('Error...', true);
+          });
+        }
+        else {
+          this.manageVoteService.createVote(this.f.votetitle.value, this.f.votedesc.value, this.currentVote.voteOptions).then(res1 => {
+            console.log('success:' + res1);
+            // move next 3 lines below once adding event notification
+            this.loading = false;
+            this.alertService.success('Voting submitted', true);
+            this.router.navigate(['/managevotes']);
+          }).catch(error => {
+            this.loading = false;
+            console.log('error:' + error);
+            this.alertService.error('Error...', true);
+          });
+        }
         // move success here
       }
       else {
@@ -112,21 +132,6 @@ export class VoteComponent implements OnInit {
       }
     });
 
-
-    // console.log('calling...');
-    // this.manageService
-    //   .createVote(this.voteForm.value)
-    //   .subscribe(
-    //     (result: User) => {
-    //       this.router.navigate(['/home']);
-    //     },
-    //     error => {
-    //       this.loading = false;
-    //     }
-    //   );
-    // this.authenticationService.currentUser.subscribe(
-    //   x => (this.currentUser = x)
-    // );
   }
 
   ngOnDestroy() {

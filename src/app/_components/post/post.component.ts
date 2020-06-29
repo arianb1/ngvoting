@@ -5,6 +5,7 @@ import { User, Post, Follow } from '../../_models';
 import { UserService, AuthenticationService, PostsService } from '../../_services';
 import { HttpClient } from '@angular/common/http';
 
+
 @Component({
   templateUrl: './post.component.html'
 })

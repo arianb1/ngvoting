@@ -18,6 +18,7 @@ import { MyProfileComponent } from './_components/my-profile/my-profile.componen
 import { ExploreComponent } from './_components/explore/explore.component';
 import { EditComponent } from './_components/edit/edit.component';
 import { VoteComponent } from './_components/vote/vote.component';
+import { ManageVotesComponent } from './_components/managevotes/managevotes.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { VoteComponent } from './_components/vote/vote.component';
     MyProfileComponent,
     ExploreComponent,
     EditComponent,
-    VoteComponent
+    VoteComponent,
+    ManageVotesComponent
   ],
   imports: [
     BrowserModule,
