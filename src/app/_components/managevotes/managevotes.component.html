@@ -8,17 +8,18 @@
   </div>
 
   <div class="row">
-    <div>
+    <div class="col-lg-12">
       <button type="button" class="btn btn-primary pull-right" [routerLink]="['/newvote', '0']" > Add New Vote</button> 
     </div>
   </div>
 
-  <ul>
-    <li *ngFor="let votex of allVotes">
-      {{votex.voteName}} 
-      {{votex.voteStatus}} 
-      <a class="pull-right;" [routerLink]="['/newvote', votex.voteAddress]">Edit</a>
-    </li>
-  </ul>
+  <div class="card" *ngFor="let votex of allVotes">
+    <div class="card-body">
+      <h4 class="card-title">{{votex.voteName}} ({{votex.voteStatus}})</h4>
+      <p class="card-text">Address: {{votex.voteAddress}}</p>
+      <a [routerLink]="['/newvote', votex.voteAddress]" class="card-link">Edit</a>
+      <a href="#" class="card-link">Delete</a>
+    </div>
+  </div>
 
 </div>

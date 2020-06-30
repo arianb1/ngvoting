@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { User } from '../../_models';
-import { UserService, AuthenticationService, AlertService, ManageVotesService } from '../../_services';
+import { UserService, AuthenticationService, AlertService, VotesManagerService } from '../../_services';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -20,7 +20,7 @@ export class ManageVotesComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
-    private votesService: ManageVotesService,
+    private votesService: VotesManagerService,
     private alertService: AlertService,
   ) {
     this.authenticationService.currentUser.subscribe(
