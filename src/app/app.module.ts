@@ -17,8 +17,9 @@ import { RegisterComponent } from './_components/register/register.component';
 import { MyProfileComponent } from './_components/my-profile/my-profile.component';
 import { ExploreComponent } from './_components/explore/explore.component';
 import { EditComponent } from './_components/edit/edit.component';
-import { VoteComponent } from './_components/vote/vote.component';
+import { ManageVoteComponent } from './_components/managevotes/managevote.component';
 import { ManageVotesComponent } from './_components/managevotes/managevotes.component';
+import { VoteComponent } from './_components/vote/vote.component';
 
 @NgModule({
   declarations: [
@@ -33,8 +34,9 @@ import { ManageVotesComponent } from './_components/managevotes/managevotes.comp
     MyProfileComponent,
     ExploreComponent,
     EditComponent,
-    VoteComponent,
-    ManageVotesComponent
+    ManageVoteComponent,
+    ManageVotesComponent,
+    VoteComponent
   ],
   imports: [
     BrowserModule,
