@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { ManageService, AuthenticationService, TestService, AlertService, VotesManagerService } from '../../_services';
+import { AuthenticationService, AlertService, VotesManagerService } from '../../_services';
 import { User, Vote } from '../../_models';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { first } from 'rxjs/operators';
@@ -24,7 +24,6 @@ export class ManageVoteComponent implements OnInit {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private manageService: ManageService,
     private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,

@@ -9,42 +9,57 @@
 
   <div class="card" *ngFor="let votex of allVotes">
     <div class="card-body">
-      <h4 class="card-title">{{votex.voteName}}
-      <button type="button" class="btn btn-primary pull-right" (click)="openModal('followers-modal',votex.voteName)">Vote</button> 
-    </h4>
+      <h4 class="card-title">
+        {{ votex.voteName }}
+        <button
+          type="button"
+          class="btn btn-primary pull-right"
+          (click)="openModal('vote-modal', votex.voteAddress)"
+        >
+          Vote
+        </button>
+      </h4>
     </div>
   </div>
-
 </div>
 
-<jw-modal id="followers-modal">
+<jw-modal id="vote-modal">
   <div class="container-fluid">
     <div class="row">
       <div class="titleHeader-follows">
-        {{modalTitle}}
+        {{ modalTitle }}
       </div>
+      <p>{{ votedesc }}</p>
     </div>
 
-    <div class="row">
-      <div class="scrollbar scrollbar-primary">
-        <div class="followList">
-
-          <ul *ngIf="voteOptions">
-            <li *ngFor="let opt of voteOptions">
-              <div class="follow small">
-                <i class="fa fa-user"></i>
-                <p class="user">
-                  {{ opt }}
-                </p>
+    <form action="/">
+      <div class="row">
+        <div class="scrollbar scrollbar-primary">
+          <div class="followList">
+            <div *ngIf="voteOptions">
+              <div *ngFor="let opt of voteOptions" class="form-check">
+                <label class="form-check-label" for={{opt}}>
+                  <input
+                    type="radio"
+                    class="form-check-input"
+                    id={{opt}}
+                    name="voteOption"
+                    value={{opt}}
+                  />{{opt}}
+                </label>
               </div>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <button class="btn btn-light" (click)="closeModal('followers-modal')">
-      Close
-    </button>
+      <button class="btn btn-light" type="submit">
+        Submit
+      </button>
+      &nbsp;
+      <button class="btn btn-light" (click)="closeModal('vote-modal')">
+        Close
+      </button>
+    </form>
   </div>
 </jw-modal>

@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { User } from '../../_models';
-import { UserService, AuthenticationService, AlertService, VotesManagerService } from '../../_services';
+import { UserService, AuthenticationService, AlertService, VotingService, VotesManagerService } from '../../_services';
 import { ModalService } from '../modalWindow/modal.service';
 import { HttpClient } from '@angular/common/http';
 
@@ -18,11 +18,13 @@ export class VoteComponent implements OnInit {
   submitted = false;
   modalTitle: string;
   voteOptions: string[] = [];
+  votedesc: string;
 
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,
-    private votesService: VotesManagerService,
+    private votesMgrService: VotesManagerService,
+    private voteService: VotingService,
     private alertService: AlertService,
     private modalService: ModalService,
   ) {
@@ -33,15 +35,22 @@ export class VoteComponent implements OnInit {
 
   ngOnInit() {
     // get current votes
-    this.votesService.getAllVotes().then(res => {
+    this.votesMgrService.getAllVotes().then(res => {
       for (const entry of res) {
         this.allVotes.push(entry);
       }
     });
   }
 
-  openModal(id: string, title: string) {
-    this.modalTitle = title;
+  openModal(id: string, voteAddress: string) {
+    this.voteOptions = [];
+    this.votesMgrService.retreiveVote(voteAddress).then(res => {
+      this.modalTitle = (res[0]);
+      this.votedesc = (res[1]);
+      for (const entry of res[2]) {
+        this.voteOptions.push(entry.trim());
+      }
+    });
     this.modalService.open(id);
   }
 

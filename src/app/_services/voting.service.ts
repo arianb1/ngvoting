@@ -3,9 +3,8 @@ const Web3 = require('web3');
 declare let require: any;
 declare let window: any;
 // tokenAbi points to the ABI file we compiled from the contract SOL file
-const tokenAbi = '[{"inputs":[{"internalType":"string","name":"vn","type":"string"},{"internalType":"string","name":"vd","type":"string"},{"internalType":"bytes32[]","name":"proposalNames","type":"bytes32[]"}],"name":"createVote","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"chairperson","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getVote","outputs":[{"internalType":"string","name":"","type":"string"},{"internalType":"string","name":"","type":"string"},{"internalType":"bytes32[]","name":"","type":"bytes32[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"proposals","outputs":[{"internalType":"bytes32","name":"name","type":"bytes32"},{"internalType":"uint256","name":"voteCount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"voteDesc","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"voteName","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"}]';
-// const address = '0xdf7B62dD8Eb0711d2Ab5B972118aAD2089C8FF0A'; // '0x37a33d0FB1d77aaa1866BAA51A4AA8BfBf3600Ba';
-// to https://ropsten.etherscan.io/address/0x37a33d0fb1d77aaa1866baa51a4aa8bfbf3600ba
+const tokenAbi = '[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"contractAddress","type":"address"}],"name":"newVoteContractCreated","type":"event"},{"inputs":[{"internalType":"string","name":"votename","type":"string"},{"internalType":"string","name":"vodedesc","type":"string"},{"internalType":"bytes32[]","name":"options","type":"bytes32[]"}],"name":"createNewVote","outputs":[{"internalType":"address","name":"newContract","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getContractCount","outputs":[{"internalType":"uint256","name":"contractCount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getDeployedChildVotes","outputs":[{"components":[{"internalType":"string","name":"voteName","type":"string"},{"internalType":"address","name":"voteAddress","type":"address"},{"internalType":"address","name":"voteCreator","type":"address"},{"internalType":"string","name":"voteStatus","type":"string"}],"internalType":"struct VoteManager.VoteInfo[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"pos","type":"uint256"}],"name":"getVoteAddressByPosition","outputs":[{"internalType":"address","name":"contractVoteAddress","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"contractVoteAddress","type":"address"}],"name":"getVoteByAddress","outputs":[{"internalType":"string","name":"","type":"string"},{"internalType":"string","name":"","type":"string"},{"internalType":"bytes32[]","name":"","type":"bytes32[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"lastContractAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"contractVoteAddress","type":"address"},{"internalType":"string","name":"vn","type":"string"},{"internalType":"string","name":"vd","type":"string"},{"internalType":"bytes32[]","name":"proposalNames","type":"bytes32[]"}],"name":"updateVoteByAddress","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"voteList","outputs":[{"internalType":"string","name":"voteName","type":"string"},{"internalType":"address","name":"voteAddress","type":"address"},{"internalType":"address","name":"voteCreator","type":"address"},{"internalType":"string","name":"voteStatus","type":"string"}],"stateMutability":"view","type":"function"}]';
+const address = '0x32aEB010D3d04170bB0fF85CC350939f99e96373';
 
 @Injectable({
   providedIn: 'root'
@@ -68,18 +67,45 @@ export class VotingService {
     return Promise.resolve(this.account);
   }
 
-  public async retreiveVoteX(address): Promise<any> {
+  public async getAllVotes(): Promise<any> {
+    const that = this;
+    console.log('start getAllVotes');
+    const myContract = new window.web3.eth.Contract(JSON.parse(tokenAbi), address);
+
+    const result1 = await myContract.methods.getDeployedChildVotes().call();
+    return Promise.resolve(result1);
+
+  }
+
+  public async createVote(vn: string, vd: string, proposalNames: Array<string>): Promise<any> {
+    const that = this;
+    console.log('createVote');
+    const myacc = await this.getAccount();
+
+    const myContract = new window.web3.eth.Contract(JSON.parse(tokenAbi), address, {
+      from: myacc,
+      gasPrice: '30000000000' // default gas price in wei, 20 gwei in this case
+    });
+
+    console.log ('before call');
+    const params = proposalNames.map(x => window.web3.utils.toHex(x.trim())); // .padEnd(66, '0')
+    const result = myContract.methods.createNewVote(vn, vd, params).send();
+    return Promise.resolve(result);
+    console.log(result);
+  }
+
+  public async retreiveVote(contractVoteAddress): Promise<any> {
     const that = this;
     console.log('start retreiveVote');
     const myContract = new window.web3.eth.Contract(JSON.parse(tokenAbi), address);
 
-    const result1 = await myContract.methods.getVote().call();
+    const result1 = await myContract.methods.getVoteByAddress(contractVoteAddress).call();
     console.log(result1);
     result1[2] = result1[2].map(x => window.web3.utils.hexToAscii(x).replace(/[^\x20-\x7E]/g, ''));
     return Promise.resolve(result1);
   }
 
-  public async updateVote(address: string, vn: string, vd: string, proposalNames: Array<string>): Promise<any> {
+  public async updateVote(contractVoteAddress: any, vn: string, vd: string, proposalNames: Array<string>): Promise<any> {
     const that = this;
     console.log('updateVote');
     const myacc = await this.getAccount();
@@ -91,7 +117,7 @@ export class VotingService {
 
     console.log ('before call');
     const params = proposalNames.map(x => window.web3.utils.toHex(x.trim())); // .padEnd(66, '0')
-    const result = myContract.methods.createVote(vn, vd, params).send();
+    const result = myContract.methods.updateVoteByAddress(contractVoteAddress, vn, vd, params).send();
     return Promise.resolve(result);
     console.log(result);
   }
