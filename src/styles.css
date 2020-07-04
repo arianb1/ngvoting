@@ -216,7 +216,7 @@ div.followList {
   overflow-y: scroll;
   margin-bottom: 25px;
   margin: auto;
-  width: 250px;
+  width: 90%;
 }
 
 .scrollbar-primary::-webkit-scrollbar {
