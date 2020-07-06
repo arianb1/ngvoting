@@ -43,14 +43,14 @@
             </div>
             <div *ngIf="voteOptions">
               <div *ngFor="let opt of voteOptions" class="form-check">
-                <label class="form-check-label" for={{opt}}>
+                <label class="form-check-label" for={{opt.optionName}}>
                   <input
                     type="radio"
                     class="form-check-input"
-                    id={{opt}}
+                    id={{opt.optionName}}
                     formControlName="voteOption"
-                    value={{opt}}
-                  />{{opt}}
+                    value={{opt.optionName}}
+                  />{{opt.optionName}}
                 </label>
               </div>
             </div>

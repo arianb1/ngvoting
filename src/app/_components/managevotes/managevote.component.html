@@ -41,9 +41,11 @@
     <p *ngIf="isEmpty" class="post-empty">Cannot add an empty option!</p>
 
     <ul class="voteOptions">
-      <li *ngFor="let opt of currentVote.voteOptions">
+      <li *ngFor="let opt of voteOptions">
         <span class="badge">X</span> 
-        <span>{{opt}}</span>
+        <span>{{opt.optionName}}</span>
+        &nbsp;&nbsp;&nbsp;
+        <span>Votes: {{opt.voteCount}}</span>
       </li>
     </ul>
 
@@ -70,4 +72,5 @@
       </button>
     </div>
   </form>
+  <app-pie-chart [chartdata]="chartdata" [chartlabels]="chartlabels"></app-pie-chart>
 </div>

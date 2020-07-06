@@ -16,6 +16,8 @@ import { RegisterComponent } from './_components/register/register.component';
 import { ManageVoteComponent } from './_components/managevotes/managevote.component';
 import { ManageVotesComponent } from './_components/managevotes/managevotes.component';
 import { VoteComponent } from './_components/vote/vote.component';
+import { PieChartComponent } from './_components/managevotes/pie-chart.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { VoteComponent } from './_components/vote/vote.component';
     AlertComponent,
     ManageVoteComponent,
     ManageVotesComponent,
-    VoteComponent
+    VoteComponent,
+    PieChartComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +39,8 @@ import { VoteComponent } from './_components/vote/vote.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ModalModule
+    ModalModule,
+    ChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

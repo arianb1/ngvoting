@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthenticationService, AlertService, VotesManagerService } from '../../_services';
-import { User, Vote } from '../../_models';
+import { User, Vote, VoteOption } from '../../_models';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
@@ -13,11 +13,14 @@ import { first } from 'rxjs/operators';
 export class ManageVoteComponent implements OnInit {
   voteForm: FormGroup;
   currentUser: User;
-  currentVote: Vote = new Vote();
   newOpt: string;
   loading = false;
   submitted = false;
   isEmpty = false;
+  voteOptions: VoteOption[] = [];
+  chartlabels: string[] = [];
+  chartdata: number[] = [];
+  inputText: string;
   // contractAdress = '0';
   // currentState: number;
   // newState: number;
@@ -35,11 +38,13 @@ export class ManageVoteComponent implements OnInit {
     );
   }
 
+
   ngOnInit() {
+    this.inputText = 'abc';
     this.voteForm = this.formBuilder.group({
       id: this.currentUser.id,
-      votetitle: [this.currentVote.voteTitle, Validators.required],
-      votedesc: [this.currentVote.voteDesc, [Validators.required, Validators.minLength(6)]],
+      votetitle: ['', Validators.required],
+      votedesc: ['', [Validators.required, Validators.minLength(6)]],
       // voteopsX: this.formBuilder.array([]),
       newOpt: [''],
       newState: [0, Validators.required],
@@ -49,16 +54,23 @@ export class ManageVoteComponent implements OnInit {
     // get current state/property of contract
     if (this.f.contractAdress.value !== '0') {
       this.manageVoteService.retreiveVote(this.f.contractAdress.value).then(res => {
-        this.f.votetitle.setValue(res[0]);
-        this.f.votedesc.setValue(res[1]);
+        this.f.votetitle.setValue(res.voteTitle);
+        this.f.votedesc.setValue(res.voteDesc);
 
-        for (const entry of res[2]) {
-          this.currentVote.voteOptions.push(entry.trim());
-        }
+        this.voteOptions = res.voteOptions;
+        // for (const entry of res[2]) {
+        //   this.voteOptions.push(entry.trim());
+        // }
 
         // this.currentState = res;
         // this.newState = this.currentState;
         this.alertService.success('Vote info successfully retreived', true);
+        // set chart data
+        for (const entry of res.voteOptions) {
+          this.chartlabels.push(entry.optionName.trim());
+          this.chartdata.push(entry.voteCount);
+        }
+
       });
     }
   }
@@ -69,7 +81,7 @@ export class ManageVoteComponent implements OnInit {
       this.isEmpty = true;
     } else {
       console.log('adding...');
-      this.currentVote.voteOptions.push(this.voteForm.controls.newOpt.value);
+      this.voteOptions.push(this.voteForm.controls.newOpt.value);
       this.voteForm.controls.newOpt.setValue('');
       this.isEmpty = false;
     }
@@ -87,7 +99,7 @@ export class ManageVoteComponent implements OnInit {
     // get account number first (login )
     let account: any = null;
     console.log('step 1');
-    console.log(this.currentVote.voteOptions);
+    console.log(this.voteOptions);
     this.manageVoteService.getAccount().then(res => {
       console.log('step 2');
       account = res;
@@ -96,7 +108,7 @@ export class ManageVoteComponent implements OnInit {
         console.log('step 3');
         if (this.f.contractAdress.value !== '0') {
           this.manageVoteService.updateVote(this.f.contractAdress.value, this.f.votetitle.value, 
-                                            this.f.votedesc.value, this.currentVote.voteOptions).then(res1 => {
+                                            this.f.votedesc.value, this.voteOptions).then(res1 => {
             console.log('success:' + res1);
             // move next 3 lines below once adding event notification
             this.loading = false;
@@ -109,7 +121,7 @@ export class ManageVoteComponent implements OnInit {
           });
         }
         else {
-          this.manageVoteService.createVote(this.f.votetitle.value, this.f.votedesc.value, this.currentVote.voteOptions).then(res1 => {
+          this.manageVoteService.createVote(this.f.votetitle.value, this.f.votedesc.value, this.voteOptions).then(res1 => {
             console.log('success:' + res1);
             // move next 3 lines below once adding event notification
             this.loading = false;

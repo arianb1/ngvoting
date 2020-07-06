@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { User } from '../../_models';
+import { User, VoteOption } from '../../_models';
 import { UserService, AuthenticationService, AlertService, VotesManagerService } from '../../_services';
 import { ModalService } from '../modalWindow/modal.service';
 import { HttpClient } from '@angular/common/http';
@@ -18,7 +18,7 @@ export class VoteComponent implements OnInit {
   loading = false;
   submitted = false;
   modalTitle: string;
-  voteOptions: string[] = [];
+  voteOptions: VoteOption[] = [];
   votedesc: string;
   voteForm: FormGroup;
 
@@ -55,11 +55,14 @@ export class VoteComponent implements OnInit {
     this.submitted = false;
     this.voteOptions = [];
     this.votesMgrService.retreiveVote(selectedVoteAddress).then(res => {
-      this.modalTitle = (res[0]);
-      this.votedesc = (res[1]);
-      for (const entry of res[2]) {
-        this.voteOptions.push(entry.trim());
-      }
+      // this.modalTitle = (res[0]);
+      // this.votedesc = (res[1]);
+      // for (const entry of res[2]) {
+      //   this.voteOptions.push(entry.trim());
+      // }
+      this.modalTitle = res.voteTitle;
+      this.votedesc = res.voteDesc;
+      this.voteOptions = res.voteOptions;
     });
     this.voteForm.patchValue({
       voteAddress: selectedVoteAddress
