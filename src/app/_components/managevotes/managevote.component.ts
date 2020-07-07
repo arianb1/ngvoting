@@ -81,7 +81,11 @@ export class ManageVoteComponent implements OnInit {
       this.isEmpty = true;
     } else {
       console.log('adding...');
-      this.voteOptions.push(this.voteForm.controls.newOpt.value);
+      const newOption: VoteOption = new VoteOption();
+      newOption.optionName = this.voteForm.controls.newOpt.value;
+      newOption.voteCount = 0;
+      this.voteOptions.push(newOption);
+
       this.voteForm.controls.newOpt.setValue('');
       this.isEmpty = false;
     }
